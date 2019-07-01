@@ -1,0 +1,33 @@
+@import (less) '~tachyons-custom/src/tachyons.css';
+
+:root {
+  --black:#1B1C1D;
+}
+
+@custom-media --breakpoint-not-small screen and (min-width: 768px);
+@custom-media --breakpoint-medium screen and (min-width: 768px) and (max-width: 1200px);
+@custom-media --breakpoint-large screen and (min-width: 1200px);
+
+
+.responsive-block(@suffix: ~'') {
+  .ma-auto@{suffix} { margin: auto; }
+  .mv-auto@{suffix} { margin-top: auto; margin-bottom: auto; }
+  .mh-auto@{suffix} { margin-right: auto; margin-left: auto; }
+  .mt-auto@{suffix} { margin-top: auto; }
+  .mb-auto@{suffix} { margin-bottom: auto; }
+  .ml-auto@{suffix} { margin-left: auto; }
+  .mr-auto@{suffix} { margin-right: auto; }
+  .flex-important@{suffix} { display: flex !important; }
+  .flex-auto-important@{suffix} { flex: 1 1 auto !important; }
+  .db-important { display: block !important; }
+  .rm-cover@{suffix} { object-fit: cover; }
+  .rm-contain@{suffix} { object-fit: contain; }
+  .rm-fill@{suffix} { object-fit: fill; }
+  .pe-none@{suffix} { pointer-events: none; }
+  .pe-all@{suffix} { pointer-events: all; }
+}
+
+.responsive-block();
+@media (--breakpoint-not-small) { .responsive-block(-ns);  }
+@media (--breakpoint-medium) { .responsive-block(-m);  }
+@media (--breakpoint-large) { .responsive-block(-l);  }
