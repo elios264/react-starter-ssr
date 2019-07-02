@@ -66,7 +66,7 @@ const csr = {
       ]
     }, {
       test: /\.jpe?g$|\.gif$|\.png$|\.ttf$|\.eot$|\.svg$|\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      use: [{ loader: 'file-loader', options: { name: '[name].[hash].[ext]' } }]
+      use: [{ loader: 'file-loader', options: { name: isDev ? '[name].[ext]' : '[name].[hash].[ext]' } }]
     }]
   }
 };
@@ -76,9 +76,9 @@ const ssr = {
   target: 'node',
   externals: [nodeExternals()],
   devtool: false,
-  entry: { server: [ifDev('webpack-hot-middleware/client'), ifDev('react-hot-loader/patch'), './appLoader.server'].filter(_.identity) },
+  entry: { server: [ifDev('react-hot-loader/patch'), './appLoader.server'].filter(_.identity) },
   optimization: { minimizer: [new TerserPlugin({ cache: true, parallel: true, terserOptions: { toplevel: true, output: { comments: false } } })] },
-  output: { path: path.resolve(__dirname, './dist'), filename: '[name].bundle.js', libraryTarget: 'commonjs2' },
+  output: { ...csr.output, filename: '[name].bundle.js', libraryTarget: 'commonjs-module', library: 'library' },
   plugins: [
     ifProd(new webpack.LoaderOptionsPlugin({ minimize: true, debug: false })),
     new webpack.EnvironmentPlugin({ DEBUG: isDev, NODE_ENV: isDev ? 'development' : 'production' }),
@@ -95,7 +95,7 @@ const ssr = {
       use: 'null-loader'
     }, {
       test: /\.jpe?g$|\.gif$|\.png$|\.ttf$|\.eot$|\.svg$|\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      use: [{ loader: 'file-loader', options: { name: '[name].[hash].[ext]' } }]
+      use: [{ loader: 'file-loader', options: { name: isDev ? '[name].[ext]' : '[name].[hash].[ext]' } }]
     }]
   }
 };

@@ -12,7 +12,7 @@ import { App } from './components/app';
 import { rootReducer } from './reducers';
 
 
-export const serverRender = ({} = {}) => {
+export const renderReact = ({} = {}) => {
 
   const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
   //store.dispatch(initialize()) we need to await this.
