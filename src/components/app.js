@@ -2,7 +2,7 @@ import './app.less';
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet/es/Helmet';
+import { Helmet } from 'react-helmet';
 import { Route, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 
