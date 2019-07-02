@@ -5,23 +5,23 @@ import ReactDOMServer from 'react-dom/server';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { StaticRouter, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import { App } from './components/app';
 import { rootReducer } from './reducers';
+import { initialize } from 'actions';
 
-
-export const renderReact = ({} = {}) => {
+export const renderReact = async ({ req }) => {
 
   const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
-  //store.dispatch(initialize()) we need to await this.
+  await store.dispatch(initialize());
 
   const body = ReactDOMServer.renderToString(
     <Provider store={store}>
-      <MemoryRouter>
+      <StaticRouter location={req.url} >
         <Route component={App} />
-      </MemoryRouter>
+      </StaticRouter>
     </Provider>
   );
 

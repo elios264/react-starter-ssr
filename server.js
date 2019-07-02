@@ -28,7 +28,7 @@ if (isDev) {
   app.use(hotMiddleware);
   app.get('*', async (req, res) => {
     const { renderReact } = res.locals.isomorphic.exports;
-    const { body, helmet, state } = await renderReact();
+    const { body, helmet, state } = await renderReact({ req });
     const { app: { js, css } } = JSON.parse(fs.readFileSync('./assets-manifest.json', 'utf8'));
     res.send(renderHtml({ body, helmet, state, js, css }));
   });
@@ -39,7 +39,7 @@ if (isDev) {
 
   app.use(express.static(path.resolve(__dirname, './dist'), { maxAge: 31536000 }));
   app.get('*', async (req, res) => {
-    const { body, helmet, state } = await renderReact();
+    const { body, helmet, state } = await renderReact({ req });
     res.send(renderHtml({ body, helmet, state, js, css }));
   });
 }

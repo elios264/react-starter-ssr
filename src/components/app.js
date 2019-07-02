@@ -12,7 +12,6 @@ const _App = () => {
   const dispatch = useDispatch();
   const message = useSelector((state) => state.message);
 
-
   return (
     <div id='main-app' className='bg-moon-gray flex items-center flex-column vh-100' >
       <Helmet>
