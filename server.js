@@ -4,7 +4,7 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const fs = require('fs');
-const _ = require('lodash');
+const renderHtml = require('./server/index.html');
 
 const isDev = process.env.NODE_ENV !== 'production';
 console.log(`Starting server with NODE_ENV is ${process.env.NODE_ENV}, isDev is ${isDev}`);
@@ -28,20 +28,19 @@ if (isDev) {
   app.use(hotMiddleware);
   app.get('*', async (req, res) => {
     const { renderReact } = res.locals.isomorphic.exports;
-    const renderHtmlPage = _.template(res.locals.isomorphic.compilation.clientStats.compilation.assets['index.ejs'].source(), { interpolate: /{{([\s\S]+?)}}/g });
-
     const { body, helmet, state } = await renderReact();
-    res.send(renderHtmlPage({ body, helmet, state }));
+    const { app: { js, css } } = JSON.parse(fs.readFileSync('./assets-manifest.json', 'utf8'));
+    res.send(renderHtml({ body, helmet, state, js, css }));
   });
 
 } else {
   const { renderReact } = require('./dist/server.bundle');
-  const renderHtmlPage = _.template(fs.readFileSync('./dist/index.ejs', 'utf8'), { interpolate: /{{([\s\S]+?)}}/g });
+  const { app: { js, css } } = require('./assets-manifest.json');
 
   app.use(express.static(path.resolve(__dirname, './dist'), { maxAge: 31536000 }));
   app.get('*', async (req, res) => {
     const { body, helmet, state } = await renderReact();
-    res.send(renderHtmlPage({ body, helmet, state }));
+    res.send(renderHtml({ body, helmet, state, js, css }));
   });
 }
 

@@ -3,13 +3,12 @@ require('env2')('./env.json');
 const _ = require('lodash');
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { ChunksAssetsPlugin } = require('./server/webpack');
 const nodeExternals = require('webpack-node-externals');
-
 
 const isDev = process.env.NODE_ENV !== 'production';
 const ifDev = (then) => (isDev ? then : null);
@@ -46,9 +45,9 @@ const csr = {
     ifProd(new webpack.LoaderOptionsPlugin({ minimize: true, debug: false })),
     new webpack.EnvironmentPlugin({ DEBUG: isDev, NODE_ENV: isDev ? 'development' : 'production' }),
     new CircularDependencyPlugin({ exclude: /node_modules/, failOnError: true, cwd: path.resolve(__dirname, './src') }),
-    new HtmlWebpackPlugin({ filename: 'index.ejs', template: 'index.ejs', inject: true, minify: false }),
     ifDev(new webpack.HotModuleReplacementPlugin()),
     new MiniCssExtractPlugin({ filename: isDev ? '[name].css' : '[name].bundle.[contenthash].css' }),
+    new ChunksAssetsPlugin()
   ].filter(_.identity),
   module: {
     rules: [{

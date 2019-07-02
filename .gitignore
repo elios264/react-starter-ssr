@@ -4,3 +4,4 @@ dist
 env.json
 logs
 .DS_Store
+assets-manifest.json
